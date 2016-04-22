@@ -1,13 +1,12 @@
-#include "htable"
+#include "htable.h"
 
- struct htab_listitem *htab_lookup_add( htab_t *t, const char *key )
+ void htab_free( htab_t *t )
 	{
-		if ( t == NULL || key == NULL )
-			{
-				fprintf( stderr, "%s\n", "Invalid table or key" );
-				return NULL;
-			}
+		if ( t == NULL )
+			return;
 		
-		unsigned int hash_idx = t->hash_fun_ptr(key, t->htab_size);
-		struct h
+		htab_clear( t );
+		free( t );
+		t = NULL;
 	}
+
