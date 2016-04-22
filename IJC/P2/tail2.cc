@@ -9,45 +9,67 @@
 //POZNÁMKY-----------------------------------------------------------------------//
 
 #include <iostream>
-#include <deque>
+#include <queue>
 #include <string>
 #include <sstream> 
-#include <cstdlib>
+#include <istream>
 #include <fstream>
 
-const unsigned long PRINT_LINES = 10;
+#define PRINT_LINES  10
 
 using namespace std;
 
+bool isnum(const std::string &str)
+	{
+		return  str.find_first_not_of("0123456789") == std::string::npos;
+	}
+
 void tail(istream &stream, unsigned long print_lines)
 	{
-		deque<string> buffer;
+		queue<string> buffer;
 		string line;
 		for (unsigned long i = 0; getline(stream, line ); i++)
 			{
-				buffer.push_front(line);
+				buffer.push(line);
 				if (i >= print_lines)
-					buffer.pop_back();
+					buffer.pop();
 			}
 		while (!buffer.empty())
 			{
-				cout << buffer.back() << endl;
-				buffer.pop_back();
+				cout << buffer.front() << endl;
+				buffer.pop();
 			}
 	}
 
 int main(int argc, char *argv[])
 	{
+		std::ios::sync_with_stdio(false);
+
+		bool read_file = false;
 		fstream file;
 		istream  *stream = &cin ;
 		unsigned long print_lines = PRINT_LINES;
-		string param;
 		if(argc == 1)
 			{
 				tail(*stream, print_lines);
 				return 0;
 			}
-		file.close();
+		if(argc == 2)
+			{
+				if (!(argv[2] == "-"))
+					{
+						file.open(argv[2]);
+		
+						if(!file.open())
+							{
+								fprintf(stderr, "%s\n", "Invalid argument");
+								return 1;
+							}
+						read_file = true;
+					}
+			}
+		if(argc)
+		file.close(); //niaky ten ifik
 		return 0;
 	}
 
