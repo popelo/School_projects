@@ -58,4 +58,4 @@ htab_remove.o: htab_remove.c htable.h
 	gcc $(CFLAGS) -fPIC -c htab_remove.c -o htab_remove.o
 
 clean:
-	rm -f *.o tail tail2 wordcount libhtable.a#wordcount-dynamic libhtable.so libhtable.a
+	rm -f *.o tail tail2 wordcount libhtable.a wordcount-dynamic libhtable.so libhtable.a

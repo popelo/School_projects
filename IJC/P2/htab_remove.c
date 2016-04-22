@@ -15,7 +15,7 @@
 			{
 				if ( !strcmp( h_item->key, key ) )
 					{
-						if ( h_item->next == NULL && last_item = NULL )
+						if ( h_item->next == NULL && last_item == NULL )
 							t->ptr[hash_idx] = NULL;
 					}
 				

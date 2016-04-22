@@ -25,7 +25,7 @@
 		char word[ 1 + MAX_LENGTH ];
 		while ( get_word(word, MAX_LENGTH, stdin ) != EOF )
 			{
-				struct htab_listitem *h_item == NULL;
+				struct htab_listitem *h_item = NULL;
 				if ( ( h_item = htab_lookup_add( tb, word ) ) == NULL )
 					{
 						fprintf( stderr, "%s\n", "Allocation error" );
@@ -36,7 +36,7 @@
 				h_item->data++;
 			}
 		htab_foreach( tb, print );
-		htab_free( tb )
+		htab_free( tb );
 		return 0;
 	}
 

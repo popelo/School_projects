@@ -1,10 +1,10 @@
 #include "htable.h"
 
-  struct htab_listitem *htab_lookup_add(htab_t *t, const char *key)
+  struct htab_listitem *htab_lookup_add( htab_t *t, const char *key )
 	{
-		if (t == NULL || key == NULL)
+		if ( t == NULL || key == NULL )
 			{
-				fprintf(stderr, "%s\n", "Invalid table or key");
+				fprintf( stderr, "%s\n", "Invalid table or key" );
 				return NULL;
 			}
 	

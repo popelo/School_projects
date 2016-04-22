@@ -10,17 +10,17 @@
 				if ( s->ptr[i] == NULL )
 					continue;
 				
-				struct htab_listitem *f_item = s->ptr[i];
-				while ( f_item->key != NULL )
+				struct htab_listitem *h_item = s->ptr[i];
+				while ( h_item->key != NULL )
 					{
-						struct htab_listitem *f_item_next = f_item->next;
-						if ( f_item->key != NULL )
-							free( f_item->key );
+						struct htab_listitem *h_item_next = h_item->next;
+						if ( h_item->key != NULL )
+							free( h_item->key );
 						
-						if ( f_item != NULL )
-							free( f_item );
+						if ( h_item != NULL )
+							free( h_item );
 		
-						f_item = f_item_next;
+						h_item = h_item_next;
 					}
 				s->ptr[i] = NULL;
 			}

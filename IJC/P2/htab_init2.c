@@ -1,19 +1,18 @@
 #include "htable.h"
 
-htab_t *htab_init2( unsigned int size, unsigned int ( *hashfunction)( const char *str, unsigned htab_size ) )
+  htab_t *htab_init2( unsigned int size, unsigned int ( *hashfunction)( const char *str, unsigned htab_size ) )
 	{
-		htab_t *newTab = malloc( size * sizeof(struct htab_listitem *) + sizeof(htab_t ) );
-
-		if (newTab == NULL)
+		htab_t *new_tb = malloc(sizeof(htab_t) + size * sizeof(struct htab_listitem *));
+		if (new_tb == NULL)
 			return NULL;
 	
 		for (unsigned int i = 0; i < size; i++)
 			{
-				newTab->ptr[i] = NULL;
+				new_tb->ptr[i] = NULL;
 			}
 
-		newTab->htab_size = size;
-		newTab->n = 0;
-		newTab->hash_fun_ptr = hashfunction;
-		return newTab;
+		new_tb->htab_size = size;
+		new_tb->n = 0;
+		new_tb->hash_fun_ptr = hashfunction;
+		return new_tb;
 	}

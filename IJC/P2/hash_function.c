@@ -1,4 +1,4 @@
-#include <hash_function.h>
+#include "hash_function.h"
 
   unsigned int hash_function( const char *str, unsigned htab_size ) 
 	{ 
