@@ -46,9 +46,10 @@ int main(int argc, char *argv[])
 		std::ios::sync_with_stdio(false);
 
 		bool read_file = false;
-		fstream file;
+		ifstream file;
 		istream  *stream = &cin ;
 		unsigned long print_lines = PRINT_LINES;
+		stringstream st;
 		if(argc == 1)
 			{
 				tail(*stream, print_lines);
@@ -56,20 +57,63 @@ int main(int argc, char *argv[])
 			}
 		if(argc == 2)
 			{
-				if (!(argv[2] == "-"))
-					{
+				st.str(argv[1]);
+				if (st.str() != "-")
+				{
 						file.open(argv[2]);
 		
-						if(!file.open())
+						if(!file.is_open())
 							{
 								fprintf(stderr, "%s\n", "Invalid argument");
 								return 1;
 							}
 						read_file = true;
-					}
+				}
+				
 			}
-		if(argc)
-		file.close(); //niaky ten ifik
+		if( argc == 3 || argc == 4 )
+			{
+				st.str(argv[1]);
+				if (st.str() == "-n")
+					{
+						if(isnum(argv[2]))
+							{
+								st.str(argv[2]);
+								st >> print_lines;
+								if(argc == 4)
+									{
+										file.open(argv[3]);
+										if(!file.is_open())
+											{
+												fprintf(stderr, "%s\n", "ERROR OPENING FILE");
+												return 1;	
+											}
+										else
+											{
+												read_file=true;
+											}
+									}
+							}
+						else
+							{
+			                               	      fprintf(stderr, "%s\n", "Invalid argument");
+                                                              return 1;
+							}
+					}			
+				else
+                        		{
+	                                         fprintf(stderr, "%s\n", "Invalid argument");
+                                                 return 1;
+                         		}
+
+			}
+				if(read_file == true)
+					stream = &file;
+				tail(*stream, print_lines);
+				
+				if(read_file == true)
+					file.close();
+			 
 		return 0;
 	}
 
