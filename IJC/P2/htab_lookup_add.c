@@ -14,14 +14,17 @@
   		struct htab_listitem *last_item = NULL;
   		while( h_item != NULL )
 			{
-				if ( strcmp( h_item->key, key) != 0 )
+				if ( strcmp( h_item->key, key ) != 0 )
 					return h_item;
 				last_item = h_item;
 				h_item = h_item->next;
 			}
 	
-  		struct htab_listitem *new_item;
-  		new_item = malloc( sizeof( struct htab_listitem ) );
+  		struct htab_listitem *new_item = malloc( sizeof( struct htab_listitem ) );
+		if ( new_item == NULL )
+			return NULL;
+		
+		new_item->key = malloc( ( strlen(key) ) * sizeof(char));
   		if ( new_item->key == NULL )
 			{
 				free( new_item );

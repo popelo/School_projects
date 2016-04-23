@@ -9,9 +9,9 @@
 		}
 	
 		struct htab_listitem *h_item = NULL ;
-		for ( unsigned int j = 0; j < t->htab_size; j++)
+		for ( unsigned int i = 0; i < t->htab_size; i++)
 			{
-				h_item = t->ptr[j];
+				h_item = t->ptr[i];
 				while ( h_item != NULL )
 					{
 						function(h_item->key, h_item->data);

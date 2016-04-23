@@ -10,7 +10,7 @@
   struct htab_listitem 
 	{
 		char *key;
-		unsigned long data;
+		long int data;
 		struct htab_listitem *next;
 	};
 

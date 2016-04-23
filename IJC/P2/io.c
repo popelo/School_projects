@@ -23,7 +23,7 @@
 				
 				s[i] = ch;
 				i++;
-				if (i > max-1)
+				if ( 1+i > max )
 					{
 						while ( !isspace( fgetc( f ) ) );
 						fprintf( stderr, "%s\n", "Maximum word length was reached" );

@@ -6,8 +6,8 @@
 		if ( new_tb == NULL)
 			return NULL;
 
-		for ( unsigned int k = 0; k < size; k++)
-			new_tb->ptr[k] = NULL;
+		for ( unsigned int i = 0; i < size; i++)
+			new_tb->ptr[i] = NULL;
 		
 		new_tb->htab_size = size;
 		new_tb->n = 0;
