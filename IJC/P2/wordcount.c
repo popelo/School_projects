@@ -12,6 +12,7 @@
 	{
 		printf( "%s\t%u\n", key, value );
 	}
+
   int main(void)
 	{
 		htab_t *tb = htab_init( tb_size );
