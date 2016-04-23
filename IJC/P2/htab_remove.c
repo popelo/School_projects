@@ -16,15 +16,22 @@
 				if ( !strcmp( h_item->key, key ) )
 					{
 						if ( h_item->next == NULL && last_item == NULL )
-							t->ptr[hash_idx] = NULL;
-					
+							{
+								t->ptr[hash_idx] = NULL;
+							}
 						else if ( h_item->next == NULL && last_item != NULL ) 
-							last_item->next = NULL;
+							{
+								last_item->next = NULL;
+							}
 						else if (last_item != NULL && h_item->next != NULL) 
-							last_item->next = h_item->next;
-						else 
-							t->ptr[hash_idx] =  h_item->next;
-			
+							{
+								last_item->next = h_item->next;
+							}
+						else
+							{ 
+								t->ptr[hash_idx] =  h_item->next;
+							}
+
 						free(h_item->key);
 						h_item->next = NULL;
 						free(h_item);

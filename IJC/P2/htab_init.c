@@ -2,7 +2,7 @@
 
   htab_t *htab_init( unsigned int size )
 	{
-		htab_t *new_tb = malloc( size * sizeof( struct htab_listitem *) + sizeof( htab_t ));
+		htab_t *new_tb = malloc( sizeof(htab_t) + size * sizeof( struct htab_listitem *)  );
 		if ( new_tb == NULL)
 			return NULL;
 

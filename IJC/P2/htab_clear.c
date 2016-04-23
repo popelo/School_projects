@@ -11,7 +11,7 @@
 					continue;
 				
 				struct htab_listitem *h_item = t->ptr[i];
-				while ( h_item->key != NULL )
+				while ( h_item != NULL )
 					{
 						struct htab_listitem *h_item_next = h_item->next;
 						if ( h_item->key != NULL )

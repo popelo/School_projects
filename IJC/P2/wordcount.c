@@ -6,13 +6,13 @@
 
 #define MAX_LENGTH 127
  
-  const unsigned int tb_size = 49157;
+  const unsigned int tb_size = 24593;
   
   void print( const char *key, unsigned int value )
 	{
 		printf( "%s\t%u\n", key, value );
 	}
-  int main()
+  int main(void)
 	{
 		htab_t *tb = htab_init( tb_size );
 		if ( tb == NULL )

@@ -14,8 +14,9 @@
   		struct htab_listitem *last_item = NULL;
   		while( h_item != NULL )
 			{
-				if ( strcmp( h_item->key, key ) != 0 )
+/*pičovinka*/		if ( !strcmp( h_item->key, key ) )
 					return h_item;
+				
 				last_item = h_item;
 				h_item = h_item->next;
 			}
@@ -24,7 +25,7 @@
 		if ( new_item == NULL )
 			return NULL;
 		
-		new_item->key = malloc( ( strlen(key) ) * sizeof(char));
+		new_item->key = malloc( ( strlen(key) + 1 ) * sizeof(char));
   		if ( new_item->key == NULL )
 			{
 				free( new_item );

@@ -1,4 +1,6 @@
-//niake if def, pozrieť neskôr
+
+#ifndef HTABLE_H_INCLUDED
+#define HTABLE_H_INCLUDED
 
 #include <stdio.h>
 #include <string.h>
@@ -30,4 +32,5 @@
   void htab_foreach( htab_t *t, void ( *function )( const char *, unsigned int ) );
   void htab_remove( htab_t *t, const char *key );
   void htab_clear( htab_t *t );
-  void htab_free( htab_t *t );	
+  void htab_free( htab_t *t );
+#endif	

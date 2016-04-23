@@ -1,5 +1,5 @@
-CFLAGS=-std=c99 -pedantic -Wall -Wextra 
-CPPFLAGS=-std=c++11 -pedantic -Wall -Wextra
+CFLAGS=-std=c99 -pedantic -Wall
+CPPFLAGS=-std=c++11 -pedantic -Wall
 
 LIBFILES=hash_function.o htab_clear.o htab_init.o htab_lookup_add.o htab_free.o htab_foreach.o htab_remove.o
 
@@ -11,24 +11,24 @@ tail: tail.c
 tail2: tail2.cc
 	g++ $(CPPFLAGS) -o tail2 tail2.cc
 
-#static
+#staticka verze
 wordcount: wordcount.o io.o libhtable.a
 	gcc $(CFLAGS) -o wordcount -static io.o wordcount.o libhtable.a
 
-#dynamic
+#dynamicka verze
 wordcount-dynamic: wordcount.o io.o libhtable.so
 	gcc $(CFLAGS) -o wordcount-dynamic wordcount.o io.o libhtable.so
 
-#libraries----------------------------------------------------------------------------------------------------------------
-#static
+#----------------------------KNIZNICE---------------------------
+#staticka knihovna
 libhtable.a: $(LIBFILES)
 	ar crs libhtable.a $(LIBFILES)
 
-#dynamic
+#sdilena (dynamicka) knihovna
 libhtable.so: $(LIBFILES)
 	gcc $(CFLAGS) -shared -fPIC -o libhtable.so $(LIBFILES)
 
-#---------------------------.o_files--------------------------------------------------------------------------------------
+#---------------------------.o FILES----------------------------
 
 wordcount.o: wordcount.c htable.h
 	gcc $(CFLAGS) -c wordcount.c -o wordcount.o
@@ -45,6 +45,8 @@ htab_clear.o: htab_clear.c htable.h
 htab_init.o: htab_init.c htable.h
 	gcc $(CFLAGS) -fPIC -c htab_init.c -o htab_init.o
 
+#init-2
+
 htab_lookup_add.o: htab_lookup_add.c htable.h
 	gcc $(CFLAGS) -fPIC -c htab_lookup_add.c -o htab_lookup_add.o
 
@@ -58,4 +60,8 @@ htab_remove.o: htab_remove.c htable.h
 	gcc $(CFLAGS) -fPIC -c htab_remove.c -o htab_remove.o
 
 clean:
-	rm -f *.o tail tail2 wordcount libhtable.a wordcount-dynamic libhtable.so libhtable.a
+	rm -f *.o wordcount libhtable.a#wordcount-dynamic libhtable.so libhtable.a
+
+ 
+
+
