@@ -14,8 +14,7 @@
 	}
   int main()
 	{
-		htab_t *tb;
-		tb = htab_init( tb_size );
+		htab_t *tb = htab_init( tb_size );
 		if ( tb == NULL )
 			{
 				fprintf( stderr, "%s\n", "Allocation error" );
