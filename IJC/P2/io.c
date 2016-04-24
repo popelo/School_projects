@@ -8,7 +8,7 @@
 		int i = 1;
 		int ch;
 	
-		while ( ( ch = fgetc( f ) != EOF) && isspace( ch ) );
+		while ( ( ( ch = fgetc( f ) ) != EOF) && isspace( ch ) );
 		if ( ch == EOF )
 			return EOF;
 		

@@ -31,14 +31,20 @@
 				free( new_item );
 				return NULL;
 			}
-
-  		strcpy( new_item->key, key);
+	//	printf("DEBUGGGGGGGGGGG %s\t %s\n", new_item->key, key);
+  		(void)strcpy( new_item->key, key);
   		new_item->data = 0;
   		new_item->next = NULL;
-  		if ( last_item == NULL )
+  			
+		t->n++;
+	
+		if ( last_item == NULL )
+			{
 			t->ptr[hash_idx] = new_item;
-  		else
-			last_item->next = new_item;
-
+  			}
+		else
+			{
+				last_item->next = new_item;
+			}
   		return new_item;
 	}

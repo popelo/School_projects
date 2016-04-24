@@ -8,7 +8,7 @@
  
   const unsigned int tb_size = 24593;
   
-  void print( const char *key, unsigned int value )
+  void printContent(const char *key, unsigned int value)
 	{
 		printf( "%s\t%u\n", key, value );
 	}
@@ -26,6 +26,7 @@
 		while ( get_word(word, MAX_LENGTH, stdin ) != EOF )
 			{
 				struct htab_listitem *h_item = NULL;
+		//		printf("DEBUGGING %s\n", word);
 				if ( ( h_item = htab_lookup_add( tb, word ) ) == NULL )
 					{
 						fprintf( stderr, "%s\n", "Allocation error" );
@@ -35,7 +36,7 @@
 				
 				h_item->data++;
 			}
-		htab_foreach( tb, print );
+		htab_foreach( tb, printContent );
 		htab_free( tb );
 		return 0;
 	}
