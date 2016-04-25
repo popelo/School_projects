@@ -1,3 +1,8 @@
+// Filip Bednár
+// xbedna63
+// VUT FIT
+// príklad (b 
+// 14.4.2016
 
 #ifndef HTABLE_H_INCLUDED
 #define HTABLE_H_INCLUDED
@@ -30,7 +35,8 @@
   struct htab_listitem *htab_lookup_add( htab_t *t, const char *key );
 
   void htab_foreach( htab_t *t, void ( *function )( const char *, unsigned int ) );
-  void htab_remove( htab_t *t, const char *key );
-  void htab_clear( htab_t *t );
   void htab_free( htab_t *t );
+  void htab_clear( htab_t *t );
+  void htab_remove( htab_t *t, const char *key );
+
 #endif	

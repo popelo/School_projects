@@ -1,16 +1,22 @@
+// Filip Bednár
+// xbedna63
+// VUT FIT
+// príklad (b 
+// 14.4.2016
+
 #include "htable.h"
 
   void htab_clear( htab_t *t )
 	{
-		if ( t->ptr == NULL || t == NULL)
+		if ( t->ptr == NULL || t == NULL )
 			return;
 
-		for ( unsigned int i = 0; i < t->htab_size; i++ )
+		for ( unsigned int j = 0; j < t->htab_size; j++ )
 			{
-				if ( t->ptr[i] == NULL )
+				if ( t->ptr[j] == NULL )
 					continue;
 				
-				struct htab_listitem *h_item = t->ptr[i];
+				struct htab_listitem *h_item = t->ptr[j];
 				while ( h_item != NULL )
 					{
 						struct htab_listitem *h_item_next = h_item->next;
@@ -22,6 +28,7 @@
 		
 						h_item = h_item_next;
 					}
-				t->ptr[i] = NULL;
+			
+				t->ptr[j] = NULL;
 			}
 	}

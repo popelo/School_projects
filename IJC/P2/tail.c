@@ -40,6 +40,7 @@
 
 		char buffer[ print_lines ][ buff_size ] ; // variable length array
 		int ch; // for testing characters
+		int flag = 0; //for cropping
 		unsigned long i = 0 ; // not in for, need later this value
 		
 		for( ; ; ++i) //reading
@@ -49,7 +50,10 @@
 				
 				if (strchr(buffer[ i % print_lines], '\n') == NULL) //case we need to crop line
 					{
-						fprintf( stderr, "Line is too long... cropping \n" );
+						if( flag == 0 )
+							fprintf( stderr, "Line is too long... cropping \n" );
+
+						flag = 1 ;
 						buffer[ i % print_lines ][ buff_size - 2 ] = '\n' ;
 						while( ( ch = getc( file ) ) != '\n' && ch != EOF); //cropping the rest
 					}

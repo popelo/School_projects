@@ -1,10 +1,16 @@
+// Filip Bednár
+// xbedna63
+// VUT FIT
+// príklad (b 
+// 14.4.2016
+
 #include "htable.h"
 
   struct htab_listitem *htab_lookup_add( htab_t *t, const char *key )
 	{
 		if ( t == NULL || key == NULL )
 			{
-				fprintf( stderr, "%s\n", "Invalid table or key" );
+				fprintf( stderr, "%s\n", "ERROR: table or key" );
 				return NULL;
 			}
 	
@@ -14,7 +20,7 @@
   		struct htab_listitem *last_item = NULL;
   		while( h_item != NULL )
 			{
-/*pičovinka*/		if ( !strcmp( h_item->key, key ) )
+		/*negacia*/if ( ( strcmp( h_item->key, key ) ) == 0 )
 					return h_item;
 				
 				last_item = h_item;
@@ -31,7 +37,7 @@
 				free( new_item );
 				return NULL;
 			}
-	//	printf("DEBUGGGGGGGGGGG %s\t %s\n", new_item->key, key);
+	
   		(void)strcpy( new_item->key, key);
   		new_item->data = 0;
   		new_item->next = NULL;
@@ -39,12 +45,9 @@
 		t->n++;
 	
 		if ( last_item == NULL )
-			{
 			t->ptr[hash_idx] = new_item;
-  			}
 		else
-			{
-				last_item->next = new_item;
-			}
+			last_item->next = new_item;
+			
   		return new_item;
 	}

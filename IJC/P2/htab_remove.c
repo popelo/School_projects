@@ -1,10 +1,16 @@
+// Filip Bednár
+// xbedna63
+// VUT FIT
+// príklad (b 
+// 14.4.2016
+
 #include "htable.h"
 
   void htab_remove( htab_t *t, const char *key )
 	{
-		if ( t == NULL || key == NULL )
+		if ( key == NULL || t == NULL )
 			{
-				fprintf( stderr, "%s\n", "Invalid table or key" );
+				fprintf( stderr, "%s\n", "ERROR: table or key" );
 				return;
 			}
 		
@@ -13,7 +19,7 @@
 		struct htab_listitem *last_item = NULL;
 		while ( h_item != NULL )
 			{
-				if ( !strcmp( h_item->key, key ) )
+/*negacia*/				if ( (strcmp( h_item->key, key )) ==  0  )
 					{
 						if ( h_item->next == NULL && last_item == NULL )
 							{
@@ -32,9 +38,10 @@
 								t->ptr[hash_idx] =  h_item->next;
 							}
 
-						free(h_item->key);
+						free( h_item->key );
 						h_item->next = NULL;
-						free(h_item);
+						t->n--;
+						free( h_item );
 						break;
 					}
 
