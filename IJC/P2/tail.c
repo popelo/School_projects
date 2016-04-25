@@ -9,6 +9,7 @@
 #include <string.h>
 #include <ctype.h>
 
+
 #define buff_size 510 //maximum length of a line
 #define PRINT_LINES 10 //default value , how many lines will be printed
 
@@ -104,7 +105,7 @@
 				if (strcmp(argv[1] , "-n") == 0)
                                         {
                                                 if( isnum( argv[2] ) == 0 )
-							print_lines = strtoul( argv[2] , &ptr , 0); // char to long
+							print_lines = strtoul( argv[2] , &ptr , 0); // char to unsigned long					
 						else
 							{
 								 fprintf( stderr, "Invalid arguments\n" );

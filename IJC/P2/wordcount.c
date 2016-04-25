@@ -14,7 +14,8 @@
 #define MAX_LENGTH 127
  
   const unsigned int tb_size = 49157;
-  
+	
+	//function to print table  
   void tb_print( const char *key, unsigned int value )
 	{
 		printf( "%s\t%u\n", key, value );
@@ -30,10 +31,10 @@
 			}
 		
 		char word[ 1 + MAX_LENGTH ];
-		while ( get_word( word, MAX_LENGTH, stdin ) != EOF )
+		while ( get_word( word, MAX_LENGTH, stdin ) != EOF ) //reading
 			{
 				struct htab_listitem *h_item = NULL;
-				if ( ( h_item = htab_lookup_add( tb, word ) ) == NULL )
+				if ( ( h_item = htab_lookup_add( tb, word ) ) == NULL ) //add word to the table
 					{
 						fprintf( stderr, "%s\n", "ERROR : allocation" );
 						htab_free( tb );

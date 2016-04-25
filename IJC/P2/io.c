@@ -29,7 +29,7 @@
 				
 				s[ i ] = ch;
 				i++;
-					if ( i  > max -2 )
+					if ( i  > max -2 ) //cropping the rest
 						{
 							s[ i ] = '\0';
 							while ( !isspace ( fgetc( f ) ) ) 
