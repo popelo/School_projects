@@ -19,7 +19,7 @@
 		struct htab_listitem *last_item = NULL;
 		while ( h_item != NULL )
 			{
-/*negacia*/				if ( (strcmp( h_item->key, key )) ==  0  )
+				if ( (strcmp( h_item->key, key )) ==  0  )
 					{
 						if ( h_item->next == NULL && last_item == NULL )
 							{

@@ -4,9 +4,6 @@
 // príklad (b 
 // 14.4.2016
 
-#ifndef HTABLE_H_INCLUDED
-#define HTABLE_H_INCLUDED
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -39,4 +36,3 @@
   void htab_clear( htab_t *t );
   void htab_remove( htab_t *t, const char *key );
 
-#endif	

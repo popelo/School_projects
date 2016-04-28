@@ -20,7 +20,7 @@
   		struct htab_listitem *last_item = NULL;
   		while( h_item != NULL )
 			{
-		/*negacia*/if ( ( strcmp( h_item->key, key ) ) == 0 )
+				if ( ( strcmp( h_item->key, key ) ) == 0 )
 					return h_item;
 				
 				last_item = h_item;
@@ -38,7 +38,7 @@
 				return NULL;
 			}
 	
-  		(void)strcpy( new_item->key, key);
+  		strcpy( new_item->key, key);
   		new_item->data = 0;
   		new_item->next = NULL;
   			
