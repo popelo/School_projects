@@ -1,0 +1,32 @@
+1 : C  1 : started
+2 : C  1 : load
+3 : P  1 : started
+4 : P  1 : board
+5 : P  1 : board order  1
+6 : P  2 : started
+7 : P  2 : board
+8 : P  2 : board last
+9 : P  3 : started
+10 : C  1 : run
+11 : C  1 : unload
+12 : P  4 : started
+13 : P  1 : unboard
+14 : P  1 : unboard order  1
+15 : P  2 : unboard
+16 : P  2 : unboard last
+17 : C  1 : load
+18 : P  3 : board
+19 : P  3 : board order  1
+20 : P  4 : board
+21 : P  4 : board last
+22 : C  1 : run
+23 : C  1 : unload
+24 : P  3 : unboard
+25 : P  3 : unboard order  1
+26 : P  4 : unboard
+27 : P  4 : unboard last
+28 : P  1 : finished
+29 : P  2 : finished
+30 : C  1 : finished
+31 : P  4 : finished
+32 : P  3 : finished
