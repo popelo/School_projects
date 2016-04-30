@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <time.h>
 #include <errno.h>
 #include <semaphore.h>
@@ -36,7 +37,7 @@
 				sem_destroy( sem_main_finished );\
 			} while(0)
 
-  int isnum( char *str )
+  int isnum( char *str ) //či je string číslo
 	{
 		int i = 0;
 		while ( str[i] != '\0')	
@@ -52,19 +53,33 @@
 	}
   
   int main( int argc, char *argv[] )
-	{		
-		int P;
-		int C;
-		int PT;
-		int RT;
+	{
 
-		int *N;
-		int *A;
-		int *I;
+//PREMENNÉ/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
+		int P; //počet procesov reprezentujúcich pasažierov 
+		int C; //kapacita vozíku
+		int PT; //maximálna doba(milisekundy) pre ktoré je generovaný nový proces pasažiera 
+		int RT; //maximálna doba(milisekundy) pre prejazd traťou
 
-		int main_p;
+		int *N; //poradie
+		int *A; //poradové číslo akcie
+		int *I;	//interný identifikátor procesu
+
+		//premenné pre procesy
+		int main_p; 
 		int car_p;
 		int pas_p;
+
+		//premenné (semafory)
+		sem_t *sem_print;
+		sem_t *sem_board;
+		sem_t *sem_unboard;
+		sem_t *sem_last_board;
+		sem_t *sem_last_unboard;
+		sem_t *sem_all_finished;
+		sem_t *sem_main_finished;
+
+//SPRÁVA ARGUMENTOV
 
 		FILE *file = fopen( "proj2.out", "wb");
 		
@@ -95,7 +110,7 @@
 													fprintf( stderr, "%s\n", "ERROR while closing file" );	
 												}
 								
-											fprintf( stderr, "%s\n", "ERROR: invalid value of parameter PT or RT" );
+											fprintf( stderr, "%s\n", "ERROR: invalid_p value of parameter PT or RT" );
 											exit(1);
 									}
 							}
@@ -106,7 +121,7 @@
                                                                         	fprintf( stderr, "%s\n", "ERROR while closing file" );
                                                                         }       
                                                                 
-                                                                fprintf(stderr, "%s\n", "ERROR: invalid value of parameter P or C" );
+                                                                fprintf(stderr, "%s\n", "ERROR: invalid_p value of parameter P or C" );
                                                                                         exit(1);
 
 							}
@@ -118,7 +133,7 @@
                                                         	fprintf( stderr, "%s\n", "ERROR while closing file" );
                                                         }       
                                                              
-                                                fprintf(stderr, "%s\n", "ERROR: invalid argument");
+                                                fprintf(stderr, "%s\n", "ERROR: invalid_p argument");
                                                 exit(1);
 					}
 						
@@ -134,172 +149,125 @@
                                 exit(1);
 
 			}
-/********************************************PROGRAM****************************************************************/
+//PRÁCA S PROCESMI
 
-	sem_t *sem_print;
-	sem_t *sem_board;
-	sem_t *sem_unboard;
-	sem_t *sem_last_board;
-	sem_t *sem_last_unboard;
-	sem_t *sem_all_finished;
-	sem_t *sem_main_finished;
+	sem_print = mmap( NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0 );
+	sem_board = mmap( NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0 );
+	sem_unboard = mmap( NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0 );
 
-	sem_print = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-	sem_board = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-	sem_unboard = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-	sem_last_board = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-	sem_last_unboard = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-	sem_all_finished = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-	sem_main_finished = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+	sem_last_board = mmap( NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0 );
+	sem_last_unboard = mmap( NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0 );
 
-	sem_init(sem_print, 1, 1);
-	sem_init(sem_board, 1, 0);
-	sem_init(sem_unboard, 1, 0);
-	sem_init(sem_last_board, 1, 0);
-	sem_init(sem_last_unboard, 1, 0);
-	sem_init(sem_all_finished, 1, 0);
-	sem_init(sem_main_finished, 1, 0);		
+	sem_all_finished = mmap( NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0 );
+	sem_main_finished = mmap( NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0 );
+
+	sem_init( sem_print, 1, 1 );
+	sem_init( sem_board, 1, 0 );
+	sem_init( sem_unboard, 1, 0 );
+
+	sem_init( sem_last_board, 1, 0 );
+	sem_init( sem_last_unboard, 1, 0 );
+
+	sem_init( sem_all_finished, 1, 0 );
+	sem_init( sem_main_finished, 1, 0 );		
 			
-	N = (int*)mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-	I = (int*)mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-	A = (int*)mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+	N = (int*)mmap( NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0 );
+	A = (int*)mmap( NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0 );
+	I = (int*)mmap( NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0 );
 	
-	*A = 1;
 	*N = 1;
+	*A = 1;	
 	*I = 0;
-	if ((main_p = fork()) < 0)
-	{
-		//Unmap pamate
-		unmap_var;
-
-		//Znicenie semaforov
-		sem_rm;
-
-		//Unmapnutie semaforov z pamate
-		unmap_sem;
-
-		//Zavretie vystupneho suboru
-		        if (fclose(file) == EOF)    
-                {
-                        fprintf(stderr, "%s\n", "Error: Closing file"); 
-                }
-
-
-		fprintf(stderr, "%s\n", "Error: fork main process");
-		exit(2);
+	if ( (main_p = fork()) < 0 )
+		{
+			unmap_var; //unmapovanie pamäte
+			sem_rm; //odstránenie semaforov
+			unmap_sem; //unmapovanie semaforov
+		        if (fclose(file) == EOF) //zatvorenie súboru   
+                		fprintf(stderr, "%s\n", "ERROR: while closing file"); 
+                
+			fprintf(stderr, "%s\n", "ERROR: forking main process");
+			exit(2);
 	}
 
-	if (main_p == 0)	//Subprocess pre generovanie pasazierov
-	{
-		for (int k = 0; k < P; k++)
-		{	
-			//Sleep pre pasaziera
-			if (PT != 0)
-				usleep(rand() % PT);
+	if ( main_p == 0 )	//Subprocess pre vytáranie pasažierov
+		{
+			for (int k = 0; k < P; k++)
+				{
+					if (PT != 0) 
+						usleep(rand() % PT); //sleep pre pasažiera
 
-			//Vytvorenie pasaziera a osetrenie error-u
-			if ((pas_p = fork()) < 0)
-			{
-				//Unmap pamate
-				unmap_var;
-
-				//Znicenie semaforov
-				sem_rm;
-
-				//Unmapnutie semaforov z pamate
-				unmap_sem;
-
-				//Zavretie vystupneho suboru
-        		if (fclose(file) == EOF)    
-                		{
-                        		fprintf(stderr, "%s\n", "Error: Closing file"); 
-                		}	
-
-
-				fprintf(stderr, "%s\n", "Error: fork subprocess for passengers");
-				exit(2);
-			}
+					if ( (pas_p = fork()) < 0 )//pasažier
+						{
+							unmap_var; //unmapovanie pamäte
+							sem_rm; //odstránenie semaforov
+							unmap_sem; //unmapovanie semaforov
+		        				if (fclose(file) == EOF) //zatvorenie súboru   
+                						fprintf(stderr, "%s\n", "ERROR: while closing file"); 
+                
+							fprintf(stderr, "%s\n", "ERROR: forking main process");
+							exit(2);
+						}
 			
-			//Ak je child == pasazier
-			if (pas_p == 0)
-			{
-				//ID kazdeho pasaziera
-				*I = *I + 1;
-				int id = *I;
-
-				//Start pasaziera a cakanie na vozik
-				sem_wait(sem_print);
-				fprintf(file, "%d %s %d %s\n", *A, ": P ", id, ": started");
-				*A += 1;
-				sem_post(sem_print);
-
-				sem_wait(sem_board);		//post CAR
-
-				//Zacatie nastupovania na vozik
-				sem_wait(sem_print);
-				fprintf(file, "%d %s %d %s\n", *A, ": P ", id, ": board");
-				*A += 1;
-				//sem_post(sem_print);
-
-				//Vypis uspesneho nastupenia na vozik
-				if (*N == C)
+			if ( pas_p == 0 )
 				{
-					//sem_wait(sem_print);
-					fprintf(file, "%d %s %d %s\n", *A, ": P ", id, ": board last");
-					*A += 1;
-					*N = 1;
-					sem_post(sem_print);
+					*I = *I + 1;
+					int id_p = *I; //id pasažiera
 
-					//Semafor pre vozik, ze je vozik plny a moze ist na cestu
-					sem_post(sem_last_board);
-				} else
-				{
-					//sem_wait(sem_print);
-					fprintf(file, "%d %s %d %s %d\n", *A, ": P ", id, ": board order ", *N);
+					sem_wait(sem_print); //štart a čakanie na vozík
+					fprintf(file, "%d %s %d %s\n", *A, ": P ", id_p, ": started");
 					*A += 1;
-					*N += 1;
 					sem_post(sem_print);
+					sem_wait(sem_board);		
+
+					sem_wait(sem_print); //nastupovanie
+					fprintf(file, "%d %s %d %s\n", *A, ": P ", id_p, ": board");
+					*A += 1;
+
+					if (*N == C) //výpis nastúpenia
+						{
+							fprintf(file, "%d %s %d %s\n", *A, ": P ", id_p, ": board last");
+							*N = 1;
+							*A += 1;
+							sem_post(sem_print);
+							sem_post(sem_last_board); //vozík je pripravený vyraziť
+						} 
+					else
+						{
+							fprintf(file, "%d %s %d %s %d\n", *A, ": P ", id_p, ": board order ", *N);
+							*N += 1;
+							*A += 1;
+							sem_post(sem_print);
 				}
 
-				//Cakanie pasazierov na vystupovanie z vozika 
-				//Caka kym vozik urobi jazdu
-				sem_wait(sem_unboard);
-
-				//Zaciatok vystupovanie z vozika
+				
+				sem_wait(sem_unboard); //vystupovanie z vozíka
 				sem_wait(sem_print);
-				fprintf(file, "%d %s %d %s\n", *A, ": P ", id, ": unboard");
+				fprintf(file, "%d %s %d %s\n", *A, ": P ", id_p, ": unboard");
 				*A += 1;
-				//sem_post(sem_print);
-
 				if (*N == C)
-				{
-					//sem_wait(sem_print);
-					fprintf(file, "%d %s %d %s\n", *A, ": P ", id, ": unboard last");
-					*A += 1;
-					*N = 1;
-					sem_post(sem_print);
+					{
+						fprintf(file, "%d %s %d %s\n", *A, ": P ", id_p, ": unboard last");
+						*A += 1;
+						*N = 1;
+						sem_post(sem_print);
+						sem_post(sem_last_unboard); // vystúpenie pasažierov z vozíka
+					}
+				 else
+					{
+						fprintf(file, "%d %s %d %s %d\n", *A, ": P ", id_p, ": unboard order ", *N);
+						*N += 1;
+						*A += 1;
+						sem_post(sem_print);
+					}
 
-					//Semafor pre vozik, vsetci pasazieri vystupili von
-					sem_post(sem_last_unboard);
-				} else
-				{
-					//sem_wait(sem_print);
-					fprintf(file, "%d %s %d %s %d\n", *A, ": P ", id, ": unboard order ", *N);
-					*A += 1;
-					*N += 1;
-					sem_post(sem_print);
-				}
-
-				//Kazdy pasazier caka kym sa vsetci "povozia" a mozu sa ukoncit
-				sem_wait(sem_all_finished);
-
+				sem_wait(sem_all_finished); //všetcia čakajú, ukončenie
 				sem_wait(sem_print);
-				fprintf(file, "%d %s %d %s\n", *A, ": P ", id, ": finished");
+				fprintf(file, "%d %s %d %s\n", *A, ": P ", id_p, ": finished");
 				*A += 1;
-				sem_post(sem_print);
 
-				//Semafor pre hlavny proces, aby sa ukoncil ako posledny
-				sem_post(sem_main_finished);
+				sem_post(sem_print);
+				sem_post(sem_main_finished); //posledný proces
 
 				exit(0);
 			}
@@ -308,116 +276,75 @@
 		exit(0);
 	}
 
-	//Fork main procesu pre vytvorenie vozika
-	if ((car_p = fork()) < 0)
-	{
-		//Unmap pamate
-		unmap_var;
-
-		//Znicenie semaforov
-		sem_rm;
-
-		//Unmapnutie semaforov z pamate
-		unmap_sem;
-
-		//Zavretie vystupneho suboru
-        if (fclose(file) == EOF)    
-                {
-                        fprintf(stderr, "%s\n", "Error: Closing file"); 
-                }
-
-
-		fprintf(stderr, "%s\n", "Error: fork main process");
-		exit(2);
-	}
-
-	//Subprocess pre vozik
-	if (car_p == 0)
-	{	
-		//Inicializacia vozika
-		sem_wait(sem_print);
-		fprintf(file, "%d %s\n", *A, ": C  1 : started");
-		*A += 1;
-		sem_post(sem_print);
-
-		//Cyklus pre "vozenie" pasazierov po trati
-		for (int k = 0; k < P/C; k++)
-		{	
-			//Zaciatok nastupovanie pasazierov
-			sem_wait(sem_print);
-			fprintf(file, "%d %s\n", *A, ": C  1 : load");
-			*A += 1;
-			sem_post(sem_print);
-
-			//Povolenie pasazierom nastupovat
-			for (int j = 0; j < C; j++)
-				sem_post(sem_board);
-
-			//Vozik caka, kym sa vsetci nastupia
-			sem_wait(sem_last_board);
-
-			//Vozik sa pusta na jazdu
-			sem_wait(sem_print);
-			fprintf(file, "%d %s\n", *A, ": C  1 : run");
-			*A += 1;
-			sem_post(sem_print);
-			
-			//Sleep -> jazda vozikom
-			if (RT != 0)
-				usleep(rand() % RT);
-
-			//Vozik dojazdil, zacina vystupovanie posazierov
-			sem_wait(sem_print);
-			fprintf(file, "%d %s\n", *A, ": C  1 : unload");
-			*A += 1;
-			sem_post(sem_print);
-
-			//Vozik povoluje pasazierom vystupovat
-			for (int j = 0; j < C; j++)
-				sem_post(sem_unboard);
-
-			//Vozik caka kym vystupia vsetci pasazieri
-			sem_wait(sem_last_unboard);
-		}
-
-		//Vsetci pasazieri sa povozili, ukonceniev vsetkych procesov na koniec (okrem hlavne procesu)
-		for (int j = 0; j < P; j++)
+	if ( (car_p = fork()) < 0 ) //vytvorenie vozíka
 		{
-			sem_post(sem_all_finished);
+			unmap_var; //unmapovanie pamäte
+			sem_rm; //odstránenie semaforov
+			unmap_sem; //unmapovanie semaforov
+ 			if (fclose(file) == EOF) //zatvorenie súboru   
+                		fprintf(stderr, "%s\n", "ERROR: while closing file"); 
+                
+			fprintf(stderr, "%s\n", "ERROR: forking main process");
+			exit(2);
 		}
 
-		sem_wait(sem_print);
-		fprintf(file, "%d %s\n", *A, ": C  1 : finished");
-		*A += 1;
-		sem_post(sem_print);
-		
-		//Semafor pre hlavny proces, aby sa ukoncil ako posledny
-		sem_post(sem_main_finished);
-
-		exit(0);
-	}
-
-	//Hlavny proces caka na ukoncenie vsetkych pasazierov + vozika
-	for (int k = 0; k < P + 1; k++)
-		sem_wait(sem_main_finished);
-
-	//Ukoncenie hlavneho procesu + cistenie pamati
-	//Unmap pamate
-	unmap_var;
-
-	//Znicenie semaforov
-	sem_rm;
-
-	//Unmapnutie semaforov z pamate
-	unmap_sem;
-
-	//Zavretie vystupneho suboru
-	if (fclose(file) == EOF)	
+	if (car_p == 0) 
 		{	
-			fprintf(stderr, "%s\n", "Error: Closing file");	
+			sem_wait(sem_print); //inicializácia vozíka
+			fprintf(file, "%d %s\n", *A, ": C  1 : started");
+			*A += 1;
+			sem_post(sem_print);
+	
+			for (int k = 0; k < P/C; k++) //vozenie pasažierov
+				{
+					sem_wait(sem_print);
+					fprintf(file, "%d %s\n", *A, ": C  1 : load"); //nastupovanie
+					*A += 1;
+					sem_post(sem_print);
+					for (int j = 0; j < C; j++)
+						sem_post(sem_board);
+					
+					sem_wait(sem_last_board); //čakanie pre nastúpenie všetkých pasažierov
+					sem_wait(sem_print);
+					fprintf(file, "%d %s\n", *A, ": C  1 : run");
+					*A += 1;
+					sem_post(sem_print);
+					
+					if (RT != 0)
+						usleep(rand() % RT); //jazda vozíkom
+		
+					sem_wait(sem_print); //vystupovanie
+					fprintf(file, "%d %s\n", *A, ": C  1 : unload");
+					*A += 1;
+					sem_post(sem_print);
+					for (int j = 0; j < C; j++)
+						sem_post(sem_unboard);
+	
+					sem_wait(sem_last_unboard); //čakanie na všetkých pasažierov
+				}
+	
+			for (int j = 0; j < P; j++) //všetci dojazdili
+					sem_post(sem_all_finished);
+			
+			sem_wait(sem_print);
+			fprintf(file, "%d %s\n", *A, ": C  1 : finished");
+			*A += 1;
+			sem_post(sem_print);
+			sem_post(sem_main_finished);
+
+			exit(0);
 		}
 
-	//Koniec procesu
-	exit(0);
+		for (int k = 0; k < P + 1; k++) //ukončenie hlavného procesu
+			sem_wait(sem_main_finished);
+
+		unmap_var; //unmapovanie pamäte
+		sem_rm; //odstránenie semaforov
+		unmap_sem; //unmapovanie semaforov
+		if (fclose(file) == EOF) //zatvorenie súboru   
+            		fprintf(stderr, "%s\n", "ERROR: while closing file"); 
+                
+		fprintf(stderr, "%s\n", "ERROR: forking main process");
+		exit(0);
 }
 	
