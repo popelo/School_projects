@@ -1,3 +1,4 @@
+
 -- fsm.vhd: Finite State Machine
 -- Author(s): 
 --
@@ -30,8 +31,8 @@ end entity fsm;
 architecture behavioral of fsm is
    type t_state is ( TEST1, TEST2, TEST3, TEST4, TEST5, TEST6,
                     TEST7_1, TEST7_2, TEST8_1, TEST8_2, TEST9_1, TEST9_2,
-					TEST10_1, TEST10_2, TEST11, PRINT_INPUT_FAIL, 
-					PRINT_INPUT_OK, FAIL, FINISH				    		);
+					TEST10_1, TEST10_2, TEST11, PRINT_INPUT_FAIL, FAIL, 
+					PRINT_INPUT_OK,  FINISH				    		);
    signal present_state, next_state : t_state;
 
 begin
@@ -49,18 +50,14 @@ end process sync_logic;
 next_state_logic : process(present_state, KEY, CNT_OF)
 begin
    case (present_state) is
-   -- - - - - - - - - - - - - - - - - - - - - - -
-  when FAIL =>
-	next_state <= FAIL;
-	if (KEY(15) = '1') then
-		next_state <= FAIL ;
-	end if;
+----------
+
 	-------------------------------------------------------
    when TEST1 =>
       next_state <= TEST1;
       if (KEY(4) = '1') then
          next_state <= TEST2;
-	  elsif	(KEY(15) = '1')
+	  elsif	(KEY(15) = '1')  then
 		 next_state <= PRINT_INPUT_FAIL;
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
@@ -71,7 +68,7 @@ begin
       next_state <= TEST2;
       if (KEY(9) = '1') then
          next_state <= TEST3;
-	  elsif	(KEY(15) = '1')
+	  elsif	(KEY(15) = '1')      then
 		 next_state <= PRINT_INPUT_FAIL;
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
@@ -81,7 +78,7 @@ begin
       next_state <= TEST3;
       if (KEY(0) = '1') then
          next_state <= TEST4;
-	  elsif	(KEY(15) = '1')
+	  elsif	(KEY(15) = '1')           then
 		 next_state <= PRINT_INPUT_FAIL;
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
@@ -92,7 +89,7 @@ begin
       next_state <= TEST4;
       if (KEY(1) = '1') then
          next_state <= TEST5;
-	  elsif	(KEY(15) = '1')
+	  elsif	(KEY(15) = '1')                  then
 		 next_state <= PRINT_INPUT_FAIL;
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
@@ -103,7 +100,7 @@ begin
       next_state <= TEST5;
       if (KEY(8) = '1') then
          next_state <= TEST6;
-	  elsif	(KEY(15) = '1')
+	  elsif	(KEY(15) = '1')            then
 		 next_state <= PRINT_INPUT_FAIL;
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
@@ -115,8 +112,8 @@ begin
       if (KEY(4) = '1') then
          next_state <= TEST7_1;
 	  elsif (KEY(9) = '1' ) then	
-		next_state <= TEST7_2
-	  elsif	(KEY(15) = '1')
+		  next_state <= TEST7_2  ;
+	  elsif	(KEY(15) = '1')               then
 		 next_state <= PRINT_INPUT_FAIL;
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
@@ -127,8 +124,8 @@ begin
       next_state <= TEST7_1;
       if (KEY(5) = '1') then
          next_state <= TEST8_1;
-	  elsif	(KEY(15) = '1')
-		 next_state <= PRINT_INPUT_FAIL;
+	  elsif	(KEY(15) = '1')             then
+		 next_state <= PRINT_INPUT_FAIL;  
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
       end if;
@@ -139,7 +136,7 @@ begin
       next_state <= TEST7_2;
       if (KEY(1) = '1') then
          next_state <= TEST8_2;
-	  elsif	(KEY(15) = '1')
+	  elsif	(KEY(15) = '1')                       then
 		 next_state <= PRINT_INPUT_FAIL;
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
@@ -150,7 +147,7 @@ begin
       next_state <= TEST8_1;
       if (KEY(2) = '1') then
          next_state <= TEST9_1;
-	  elsif	(KEY(15) = '1')
+	  elsif	(KEY(15) = '1')                 then
 		 next_state <= PRINT_INPUT_FAIL;
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
@@ -161,7 +158,7 @@ begin
       next_state <= TEST8_2;
       if (KEY(9) = '1') then
          next_state <= TEST9_2;
-	  elsif	(KEY(15) = '1')
+	  elsif	(KEY(15) = '1')                then
 		 next_state <= PRINT_INPUT_FAIL;
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
@@ -172,7 +169,7 @@ begin
       next_state <= TEST9_1;
       if (KEY(5) = '1') then
          next_state <= TEST10_1;
-	  elsif	(KEY(15) = '1')
+	  elsif	(KEY(15) = '1')                  then
 		 next_state <= PRINT_INPUT_FAIL;
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
@@ -182,7 +179,7 @@ begin
       next_state <= TEST9_2;
       if (KEY(7) = '1') then
          next_state <= TEST10_2;
-	  elsif	(KEY(15) = '1')
+	  elsif	(KEY(15) = '1')                    then
 		 next_state <= PRINT_INPUT_FAIL;
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
@@ -192,7 +189,7 @@ begin
       next_state <= TEST10_1;
       if (KEY(8) = '1') then
          next_state <= TEST11;
-	  elsif	(KEY(15) = '1')
+	  elsif	(KEY(15) = '1')                then
 		 next_state <= PRINT_INPUT_FAIL;
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
@@ -204,7 +201,7 @@ begin
       next_state <= TEST10_2;
       if (KEY(2) = '1') then
          next_state <= TEST11;
-	  elsif	(KEY(15) = '1')
+	  elsif	(KEY(15) = '1')               then
 		 next_state <= PRINT_INPUT_FAIL;
 	  elsif (KEY(15 downto 0) /= "0000000000000000") then
          next_state <= FAIL;
@@ -232,6 +229,12 @@ begin
       end if;
 	  
    -- - - - - - - - - - - - - - - - - - - - - - -
+    when FAIL =>
+	next_state <= FAIL;
+	if (KEY(15) = '1') then
+		next_state <= PRINT_INPUT_FAIL ;
+	end if;
+   
    when FINISH =>
       next_state <= FINISH;
       if (KEY(15) = '1') then
